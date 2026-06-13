@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="메이크타임 닻">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3A338F"/>
+      <stop offset="1" stop-color="#15124A"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="0" fill="url(#bg)"/>
+  <g fill="none" stroke="#FFDFB0" stroke-width="26" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="256" cy="118" r="40"/>
+    <line x1="256" y1="118" x2="256" y2="404"/>
+    <line x1="156" y1="179" x2="356" y2="179"/>
+    <path d="M150 300 Q256 408 362 300"/>
+  </g>
+  <g fill="#FFDFB0">
+    <path d="M362 300 l44 -18 -22 46 z"/>
+    <path d="M150 300 l-44 -18 22 46 z"/>
+    <circle cx="256" cy="404" r="15"/>
+  </g>
+</svg>

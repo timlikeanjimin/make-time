@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
+  <title>⚓ 메이크타임</title>
+  <meta name="description" content="하루에 단 하나의 하이라이트. 그걸 해냈으면 그 하루는 성공." />
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.webmanifest" />
+  <meta name="theme-color" content="#191654" />
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+
+  <!-- iOS 홈 화면 앱 -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="메이크타임" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-state="empty">
+  <div class="bg-glow"></div>
+
+  <main id="app">
+    <!-- 상단바 -->
+    <header class="topbar">
+      <div class="brand"><span class="anchor">⚓</span> 메이크타임</div>
+      <div class="topbar-right">
+        <span id="date" class="date"></span>
+        <span id="streak" class="streak" hidden></span>
+      </div>
+    </header>
+
+    <!-- 하이라이트 히어로 -->
+    <section class="hero">
+      <div class="hero-label" id="hero-label">오늘의 하이라이트</div>
+      <div class="hero-highlight" id="hero-highlight">오늘 단 하나, 가장 중요한 일은?</div>
+      <div class="hero-status" id="hero-status">탭해서 오늘의 하이라이트를 정하세요</div>
+
+      <div class="hero-actions" id="hero-actions"></div>
+    </section>
+
+    <!-- 그 외 할 일 -->
+    <section class="card todos-card">
+      <div class="card-head">
+        <h2>📌 그 외 할 일</h2>
+        <span class="muted" id="todos-count"></span>
+      </div>
+      <ul class="todo-list" id="todo-list"></ul>
+      <form class="todo-add" id="todo-add">
+        <input type="text" id="todo-input" placeholder="나머지 할 일 추가…" autocomplete="off" maxlength="80" />
+        <button type="submit" aria-label="추가">＋</button>
+      </form>
+    </section>
+
+    <!-- 7일 기록 -->
+    <section class="card streak-card">
+      <div class="card-head">
+        <h2>📊 최근 7일</h2>
+        <button class="link-btn" id="open-history">전체 기록 →</button>
+      </div>
+      <div class="dots" id="dots"></div>
+    </section>
+
+    <!-- 하단 -->
+    <footer class="footer">
+      <button class="ghost-btn" id="open-reflect">🌙 돌아보기 (1분 실험일지)</button>
+      <p class="footer-rule">단 하나의 규칙 — 가장 중요한 일을 해낸 하루는 성공입니다.</p>
+    </footer>
+  </main>
+
+  <!-- 토스트 -->
+  <div id="toast" class="toast" hidden></div>
+
+  <!-- iOS 설치 안내 -->
+  <div id="ios-install" class="install-hint" hidden>
+    <button class="install-close" id="ios-install-close" aria-label="닫기">✕</button>
+    홈 화면에 앱으로 추가하기 — 하단 <strong>공유 ⬆︎</strong> → <strong>홈 화면에 추가</strong>
+  </div>
+
+  <!-- ===== 모달: 하이라이트 정하기 ===== -->
+  <div class="modal-overlay" id="modal-highlight" hidden>
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-grip"></div>
+      <h3>오늘의 하이라이트 ⚓</h3>
+      <p class="modal-sub">오늘 단 한 가지, 가장 중요한 일은?</p>
+      <ul class="criteria">
+        <li><b>긴급성</b> — 오늘 안 하면 진짜 문제가 되는가</li>
+        <li><b>만족감</b> — 끝내면 '의미 있었다' 싶은가</li>
+        <li><b>즐거움</b> — 순수하게 에너지를 주는가</li>
+      </ul>
+      <input type="text" id="highlight-input" placeholder="예: 사업계획서 1차 초안" maxlength="120" />
+
+      <label class="deadline-row">
+        <span>⏰ 마감 시각 <em>(선택)</em></span>
+        <input type="time" id="deadline-input" />
+      </label>
+      <p class="hint">70% 확률로 지킬 수 있는 시각으로. '이번 주 안에'는 마감이 아닙니다.</p>
+
+      <div class="modal-actions">
+        <button class="btn-ghost" data-close>취소</button>
+        <button class="btn-primary" id="save-highlight">닻 내리기 ⚓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 모달: 돌아보기 ===== -->
+  <div class="modal-overlay" id="modal-reflect" hidden>
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-grip"></div>
+      <h3>1분 돌아보기 🌙</h3>
+      <p class="modal-sub">오늘 하루를 닫고, 내일을 조정해요.</p>
+
+      <div class="rate-block">
+        <label>오늘 하이라이트에 얼마나 집중했나요?</label>
+        <div class="stars" id="stars-focus" data-rate="focus"></div>
+      </div>
+      <div class="rate-block">
+        <label>오늘 에너지는 어땠나요?</label>
+        <div class="stars" id="stars-energy" data-rate="energy"></div>
+      </div>
+
+      <label class="exp-label">🧪 실험일지 — 내일은 뭘 다르게?</label>
+      <textarea id="reflect-note" rows="2" placeholder="예: 오전엔 폰을 다른 방에 두기" maxlength="200"></textarea>
+
+      <div class="modal-actions">
+        <button class="btn-ghost" data-close>닫기</button>
+        <button class="btn-primary" id="save-reflect">하루 닫기 🌙</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 모달: 기록 ===== -->
+  <div class="modal-overlay" id="modal-history" hidden>
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-grip"></div>
+      <h3>📊 기록</h3>
+      <p class="modal-sub" id="history-summary"></p>
+      <div class="history-list" id="history-list"></div>
+      <div class="modal-actions">
+        <button class="btn-primary" data-close>닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
