@@ -22,6 +22,10 @@ body[data-state="done"]    { --g1: #0E7A5F; --g2: #073D33; }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 [hidden] { display: none !important; }
 
+/* 커스텀 SVG 아이콘 (currentColor 상속) */
+.ico { display: inline-flex; align-items: center; justify-content: center; }
+svg.ic { width: 1.05em; height: 1.05em; display: inline-block; vertical-align: -0.16em; }
+
 html, body { min-height: 100%; }
 
 body {
@@ -67,8 +71,8 @@ body[data-state="overdue"] .bg-glow { opacity: 0.5; }
   justify-content: space-between;
   padding: 8px 4px 0;
 }
-.brand { font-weight: 800; font-size: 16px; letter-spacing: -0.02em; }
-.brand .anchor { color: var(--accent); }
+.brand { font-weight: 800; font-size: 16px; letter-spacing: -0.02em; display: inline-flex; align-items: center; gap: 6px; }
+.brand-ico { color: var(--accent); }
 .topbar-right { display: flex; align-items: center; gap: 10px; }
 .date { font-size: 13px; color: var(--faint); font-weight: 500; }
 .streak {
@@ -114,7 +118,9 @@ body[data-state="done"] .hero-status { color: var(--green); }
   font-size: 16px; font-weight: 700;
   cursor: pointer; transition: transform 0.08s ease, filter 0.15s ease;
   font-family: inherit;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
 }
+.hero-actions button svg.ic { width: 19px; height: 19px; }
 .hero-actions button:active { transform: scale(0.97); }
 .act-primary { background: var(--accent); color: #2a1c00; box-shadow: 0 6px 20px rgba(255,180,84,0.3); }
 .act-done { background: var(--green); color: #06251c; box-shadow: 0 6px 20px rgba(124,247,196,0.3); }
@@ -180,6 +186,7 @@ body[data-state="done"] .hero-status { color: var(--green); }
   background: rgba(255,255,255,0.06); border: 1.5px solid var(--faint);
 }
 .dot.done { background: var(--green); border-color: var(--green); color: #06251c; }
+.dot svg.ic { width: 15px; height: 15px; stroke-width: 2.6; }
 .dot.partial { border-color: var(--accent); color: var(--accent); }
 .dot.today { box-shadow: 0 0 0 2px rgba(255,255,255,0.25); }
 .dot-day { font-size: 10px; color: var(--faint); font-weight: 600; }
@@ -291,6 +298,7 @@ body[data-state="done"] .hero-status { color: var(--green); }
 .modal-actions button {
   flex: 1; min-height: 52px; border: none; border-radius: 15px;
   font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit;
+  display: inline-flex; align-items: center; justify-content: center; gap: 7px;
 }
 .btn-primary { background: var(--accent); color: #2a1c00; }
 .btn-ghost { background: rgba(255,255,255,0.1); color: var(--ink); flex: 0 0 38%; }
@@ -298,7 +306,8 @@ body[data-state="done"] .hero-status { color: var(--green); }
 /* ---------- 기록 ---------- */
 .history-list { margin-top: 14px; display: flex; flex-direction: column; gap: 4px; max-height: 50vh; overflow-y: auto; }
 .history-row { display: flex; align-items: flex-start; gap: 12px; padding: 12px 6px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-.history-mark { font-size: 17px; flex: 0 0 24px; text-align: center; padding-top: 1px; }
+.history-mark { font-size: 17px; flex: 0 0 24px; display: flex; justify-content: center; padding-top: 2px; }
+.history-mark svg.ic { width: 19px; height: 19px; stroke-width: 2.2; }
 .history-body { flex: 1; min-width: 0; }
 .history-date { font-size: 12px; color: var(--faint); font-weight: 600; }
 .history-hl { font-size: 14px; line-height: 1.4; margin-top: 2px; word-break: keep-all; }

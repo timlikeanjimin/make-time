@@ -26,7 +26,7 @@
   <main id="app">
     <!-- 상단바 -->
     <header class="topbar">
-      <div class="brand"><span class="anchor">⚓</span> 메이크타임</div>
+      <div class="brand"><span class="ico brand-ico" data-icon="anchor"></span> 메이크타임</div>
       <div class="topbar-right">
         <span id="date" class="date"></span>
         <span id="streak" class="streak" hidden></span>
@@ -45,7 +45,7 @@
     <!-- 그 외 할 일 -->
     <section class="card todos-card">
       <div class="card-head">
-        <h2>📌 그 외 할 일</h2>
+        <h2><span class="ico" data-icon="list"></span> 그 외 할 일</h2>
         <span class="muted" id="todos-count"></span>
       </div>
       <ul class="todo-list" id="todo-list"></ul>
@@ -58,15 +58,15 @@
     <!-- 7일 기록 -->
     <section class="card streak-card">
       <div class="card-head">
-        <h2>📊 최근 7일</h2>
-        <button class="link-btn" id="open-history">전체 기록 →</button>
+        <h2><span class="ico" data-icon="chart"></span> 최근 7일</h2>
+        <button class="link-btn" id="open-history">전체 기록 <span class="ico" data-icon="arrow"></span></button>
       </div>
       <div class="dots" id="dots"></div>
     </section>
 
     <!-- 하단 -->
     <footer class="footer">
-      <button class="ghost-btn" id="open-reflect">🌙 돌아보기 (1분 실험일지)</button>
+      <button class="ghost-btn" id="open-reflect"><span class="ico" data-icon="moon"></span> 돌아보기 (1분 실험일지)</button>
       <p class="footer-rule">단 하나의 규칙 — 가장 중요한 일을 해낸 하루는 성공입니다.</p>
     </footer>
   </main>
@@ -84,7 +84,7 @@
   <div class="modal-overlay" id="modal-highlight" hidden>
     <div class="modal" role="dialog" aria-modal="true">
       <div class="modal-grip"></div>
-      <h3>오늘의 하이라이트 ⚓</h3>
+      <h3>오늘의 하이라이트 <span class="ico" data-icon="anchor"></span></h3>
       <p class="modal-sub">오늘 단 한 가지, 가장 중요한 일은?</p>
       <ul class="criteria">
         <li><b>긴급성</b> — 오늘 안 하면 진짜 문제가 되는가</li>
@@ -94,14 +94,14 @@
       <input type="text" id="highlight-input" placeholder="예: 사업계획서 1차 초안" maxlength="120" />
 
       <label class="deadline-row">
-        <span>⏰ 마감 시각 <em>(선택)</em></span>
+        <span><span class="ico" data-icon="clock"></span> 마감 시각 <em>(선택)</em></span>
         <input type="time" id="deadline-input" />
       </label>
       <p class="hint">70% 확률로 지킬 수 있는 시각으로. '이번 주 안에'는 마감이 아닙니다.</p>
 
       <div class="modal-actions">
         <button class="btn-ghost" data-close>취소</button>
-        <button class="btn-primary" id="save-highlight">닻 내리기 ⚓</button>
+        <button class="btn-primary" id="save-highlight"><span class="ico" data-icon="anchor"></span> 닻 내리기</button>
       </div>
     </div>
   </div>
@@ -110,7 +110,7 @@
   <div class="modal-overlay" id="modal-reflect" hidden>
     <div class="modal" role="dialog" aria-modal="true">
       <div class="modal-grip"></div>
-      <h3>1분 돌아보기 🌙</h3>
+      <h3>1분 돌아보기 <span class="ico" data-icon="moon"></span></h3>
       <p class="modal-sub">오늘 하루를 닫고, 내일을 조정해요.</p>
 
       <div class="rate-block">
@@ -122,7 +122,7 @@
         <div class="stars" id="stars-energy" data-rate="energy"></div>
       </div>
 
-      <label class="exp-label">🧪 실험일지 — 내일은 뭘 다르게?</label>
+      <label class="exp-label"><span class="ico" data-icon="flask"></span> 실험일지 — 내일은 뭘 다르게?</label>
       <textarea id="reflect-note" rows="2" placeholder="예: 오전엔 폰을 다른 방에 두기" maxlength="200"></textarea>
 
       <div class="modal-actions">
@@ -136,7 +136,7 @@
   <div class="modal-overlay" id="modal-history" hidden>
     <div class="modal" role="dialog" aria-modal="true">
       <div class="modal-grip"></div>
-      <h3>📊 기록</h3>
+      <h3><span class="ico" data-icon="chart"></span> 기록</h3>
       <p class="modal-sub" id="history-summary"></p>
       <div class="history-list" id="history-list"></div>
       <div class="modal-actions">

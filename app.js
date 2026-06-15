@@ -19,6 +19,29 @@ const MSG = {
   ],
 };
 
+// ---------- 아이콘 (이모지 대신 커스텀 인라인 SVG, currentColor 상속) ----------
+const ICONS = {
+  anchor: '<circle cx="12" cy="5" r="2.5"/><path d="M12 7.5v13"/><path d="M7.5 10.5h9"/><path d="M5 13a7 7 0 0 0 14 0"/>',
+  list: '<path d="M9 6h10"/><path d="M9 12h10"/><path d="M9 18h10"/><path d="M4.6 6h.01"/><path d="M4.6 12h.01"/><path d="M4.6 18h.01"/>',
+  chart: '<path d="M4 20h16"/><path d="M7 20v-6"/><path d="M12 20V6"/><path d="M17 20v-9"/>',
+  moon: '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9z" fill="currentColor" stroke="none"/>',
+  check: '<path d="M20 6L9 17l-5-5"/>',
+  trophy: '<path d="M7.5 4.5h9V8a4.5 4.5 0 0 1-9 0V4.5z"/><path d="M7.5 5.5H5A2.5 2.5 0 0 0 7.5 8"/><path d="M16.5 5.5H19A2.5 2.5 0 0 1 16.5 8"/><path d="M12 12.5v3"/><path d="M9 19.5h6l-.6-4.5h-4.8z"/>',
+  pencil: '<path d="M16.5 4.5l3 3"/><path d="M4 20l1-4L16 5l3 3L8 19l-4 1z"/>',
+  flame: '<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z" fill="currentColor" stroke="none"/>',
+  clock: '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3.2 1.8"/>',
+  flask: '<path d="M9.5 3.5h5"/><path d="M10.5 3.5v6l-4.5 7.8A1.6 1.6 0 0 0 7.4 19.8h9.2a1.6 1.6 0 0 0 1.4-2.5L13.5 9.5v-6"/><path d="M8 15h8"/>',
+  arrow: '<path d="M5 12h13"/><path d="M12.5 6l6 6-6 6"/>',
+  ring: '<circle cx="12" cy="12" r="7.5"/>',
+};
+function ic(name) {
+  return `<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] || ""}</svg>`;
+}
+function iconSpan(name) { return `<span class="ico">${ic(name)}</span>`; }
+function applyStaticIcons() {
+  document.querySelectorAll("[data-icon]").forEach((s) => { s.innerHTML = ic(s.dataset.icon); });
+}
+
 // ---------- 저장소 ----------
 function load() {
   try {
@@ -106,11 +129,13 @@ function render() {
 
   $("date").textContent = fmtDate();
   const sEl = $("streak");
-  if (streak >= 2) { sEl.hidden = false; sEl.textContent = `🔥 ${streak}일`; }
+  if (streak >= 2) { sEl.hidden = false; sEl.innerHTML = `${iconSpan("flame")} ${streak}일`; }
   else sEl.hidden = true;
 
   // 히어로
-  $("hero-label").textContent = state === "done" ? "✓ 오늘의 하이라이트 완수" : "오늘의 하이라이트";
+  $("hero-label").innerHTML = state === "done"
+    ? `${iconSpan("check")} 오늘의 하이라이트 완수`
+    : "오늘의 하이라이트";
   $("hero-highlight").textContent = t.highlight || "오늘 단 하나,\n가장 중요한 일은?";
   $("hero-highlight").style.whiteSpace = t.highlight ? "normal" : "pre-line";
 
@@ -120,13 +145,13 @@ function render() {
   const acts = $("hero-actions");
   acts.innerHTML = "";
   if (!t.highlight) {
-    acts.appendChild(mkBtn("⚓ 하이라이트 정하기", "act-primary", openHighlight));
+    acts.appendChild(mkBtn("anchor", "하이라이트 정하기", "act-primary", openHighlight));
   } else if (!t.done) {
-    acts.appendChild(mkBtn("✅ 완수했어요!", "act-done", completeHighlight));
-    acts.appendChild(mkBtn("✏️", "act-secondary", openHighlight));
+    acts.appendChild(mkBtn("check", "완수했어요!", "act-done", completeHighlight));
+    acts.appendChild(mkBtn("pencil", "", "act-secondary", openHighlight));
   } else {
-    acts.appendChild(mkBtn("🎉 오늘 하루는 성공", "act-done", celebrate));
-    acts.appendChild(mkBtn("✏️", "act-secondary", openHighlight));
+    acts.appendChild(mkBtn("trophy", "오늘 하루는 성공", "act-done", celebrate));
+    acts.appendChild(mkBtn("pencil", "", "act-secondary", openHighlight));
   }
 
   renderTodos(t);
@@ -139,20 +164,23 @@ function renderStatus(t, state) {
   if (state === "empty") { s.textContent = "탭해서 오늘의 하이라이트를 정하세요"; return; }
   if (state === "done") {
     const hour = new Date().getHours();
-    s.textContent = hour >= 21 && !t.reflection ? "✓ 완수 · 자기 전 1분, 돌아보기 🌙" : "✓ 완수 — " + pick(MSG.done);
+    s.innerHTML = `${iconSpan("check")} ` + (hour >= 21 && !t.reflection
+      ? `완수 · 자기 전 1분, 돌아보기 ${iconSpan("moon")}`
+      : `완수 — ${pick(MSG.done)}`);
     return;
   }
   if (t.deadline) {
     const dl = new Date(t.deadline);
-    s.textContent = `⏰ ${fmtTime(dl)}까지 · ${remainText(dl)}`;
+    s.innerHTML = `${iconSpan("clock")} ${fmtTime(dl)}까지 · ${remainText(dl)}`;
     s.classList.add("live");
     return;
   }
   s.textContent = pick(MSG.focus);
 }
 
-function mkBtn(label, cls, fn) {
-  const b = el("button", cls, label);
+function mkBtn(iconName, label, cls, fn) {
+  const b = el("button", cls);
+  b.innerHTML = (iconName ? iconSpan(iconName) : "") + (label ? `<span>${label}</span>` : "");
   b.addEventListener("click", fn);
   return b;
 }
@@ -193,11 +221,13 @@ function renderDots() {
     const isToday = i === 0;
     const col = el("div", "dot-col" + (isToday ? " is-today" : ""));
     let cls = "dot";
-    let mark = "";
-    if (e.done) { cls += " done"; mark = "✓"; }
-    else if (e.highlight) { cls += " partial"; mark = "·"; }
+    if (e.done) cls += " done";
+    else if (e.highlight) cls += " partial";
     if (isToday) cls += " today";
-    col.appendChild(el("div", cls, mark));
+    const dot = el("div", cls);
+    if (e.done) dot.innerHTML = ic("check");
+    else if (e.highlight) dot.textContent = "·";
+    col.appendChild(dot);
     col.appendChild(el("div", "dot-day", labels[d.getDay()]));
     wrap.appendChild(col);
   }
@@ -250,7 +280,7 @@ function completeHighlight() {
 function celebrate() {
   const streak = calcStreak();
   let msg = pick(MSG.celebrate);
-  if (streak >= 2) msg += `  🔥 ${streak}일 연속!`;
+  if (streak >= 2) msg += `  ·  ${streak}일 연속!`;
   toast(msg, 3200);
   confetti();
 }
@@ -313,7 +343,11 @@ function openHistory() {
   for (const k of keys) {
     const d = data.days[k];
     const row = el("div", "history-row");
-    row.appendChild(el("div", "history-mark", d.done ? "✅" : d.highlight ? "▫️" : "–"));
+    const mark = el("div", "history-mark");
+    if (d.done) { mark.innerHTML = ic("check"); mark.style.color = "var(--green)"; }
+    else if (d.highlight) { mark.innerHTML = ic("ring"); mark.style.color = "var(--faint)"; }
+    else { mark.textContent = "–"; mark.style.color = "var(--faint)"; }
+    row.appendChild(mark);
     const body = el("div", "history-body");
     body.appendChild(el("div", "history-date", k));
     const hl = el("div", "history-hl" + (d.highlight ? "" : " empty"), d.highlight || "(하이라이트 없음)");
@@ -470,6 +504,7 @@ function bind() {
 
 // ---------- 시작 ----------
 bind();
+applyStaticIcons();
 render();
 scheduleReminders();
 maybeShowInstallHint();
